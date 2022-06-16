@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Caption Generator</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/styles/style.css">
+</head>
+<body>
+   
+    <h1>Image Caption Generator</h1>
+    <p>AI based caption generator</p>
+    <h2>Upload Image Here</h2>
+    <input type="file" name="image" onchange="readURL(this)" id="image">
+    <div class="image-container">
+        <img src="" class="img-caption" alt="">
+    </div>
+    <div class="row">
+        <div class="col-sm-12" id="predic">
+
+        </div>
+    </div>
+    <button type="button" onclick="getpredict()" class="generate-caption">Generate Caption</button>
+    <button onclick="resetCaption()" class="reset-caption">Reset</button>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../static/styles/custom.js"></script>
+    <script>
+        function getpredict(){
+            var form_data = new FormData();
+            var file = $("#image")[0].files[0];
+            form_data.append('image', file)
+            $.ajax({
+                            url: "/predictions",
+                            type: "POST",
+                            contentType: false,
+                            processData: false,
+                            enctype: 'multipart/form-data',
+                            data: form_data,
+                            success: function (response) {
+
+                                      console.log(response)
+                                      $("#predic").html(`<p>`+response.beamindex1+`</p>`+`<p>`+response.beamindex2+`</p>`+`<p>`+response.beamindex3+`</p>`+`<p>`+response.greedy+`</p>`)
+
+
+                            }
+
+                            });
+            $('.generate-caption').css("display", "none");
+            $('.reset-caption').css("display", "inline-block");
+        }
+        function resetCaption(){
+            location.reload();
+        }
+
+    </script>
+</body>
+</html>
